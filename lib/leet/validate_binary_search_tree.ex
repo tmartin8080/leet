@@ -28,7 +28,7 @@ defmodule BST do
 
   @spec is_valid_bst(root :: TreeNode.t() | nil) :: boolean
   def is_valid_bst(root) do
-    validate(root, @min, @max)
+    validate(root, trunc(@min), trunc(@max))
   end
 
   # Empty trees are valid BSTs.
