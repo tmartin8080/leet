@@ -10,26 +10,34 @@ defmodule ValidateBinarySearchTree do
 
   ## Constraints:
 
-  1. The number of nodes in the tree is in the range [1, 104].
+  1. The number of nodes in the tree is in the range [1, 10^4].
   2. -2^31 <= Node.val <= 2^31 - 1
 
   """
-  @min :math.pow(-2, 31)
-  @max :math.pow(2, 31) - 1
-
   @spec is_valid_bst(root :: TreeNode.t() | nil) :: boolean
   def is_valid_bst(root) do
-    validate(root, trunc(@min), trunc(@max))
+    stack = in_order(root, [])
+    result = Enum.reduce_while(stack, :root, &validate/2)
+    is_integer(result)
   end
 
-  # Empty trees are valid BSTs.
-  defp validate(nil, _low, _high), do: true
+  defp in_order(nil, stack), do: stack
 
-  # The current node's value must be between low and high.
-  defp validate(%{val: val}, low, high) when val <= low or val >= high, do: false
+  defp in_order(node, stack) do
+    stack = in_order(node.left, stack)
+    stack = [node.val | stack]
+    in_order(node.right, stack)
+  end
 
-  # The left and right subtree must also be valid.
-  defp validate(node, low, high) do
-    validate(node.right, node.val, high) and validate(node.left, low, node.val)
+  defp validate(:root, curr) do
+    {:cont, curr}
+  end
+
+  defp validate(curr, prev) do
+    if curr >= prev do
+      {:halt, :invalid_bst}
+    else
+      {:cont, curr}
+    end
   end
 end

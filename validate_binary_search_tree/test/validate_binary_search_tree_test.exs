@@ -18,7 +18,7 @@ defmodule ValidateBinarySearchTreeTest do
         }
       }
 
-      assert is_valid_bst(root) == true
+      assert is_valid_bst(root)
     end
 
     test "input: root = [5,1,4,null,null,3,6]" do
@@ -32,7 +32,47 @@ defmodule ValidateBinarySearchTreeTest do
         val: 5
       }
 
-      assert is_valid_bst(root) == false
+      refute is_valid_bst(root)
+    end
+
+    test "input: root = [2147483647]" do
+      root = %TreeNode{
+        val: 2_147_483_647,
+        right: nil,
+        left: nil
+      }
+
+      assert is_valid_bst(root)
+    end
+
+    test "input: root = [2,2,2]" do
+      root = %TreeNode{
+        left: %TreeNode{left: nil, right: nil, val: 2},
+        right: %TreeNode{left: nil, right: nil, val: 2},
+        val: 2
+      }
+
+      refute is_valid_bst(root)
+    end
+
+    test "input: root = [-2147483648,null,2147483647]" do
+      root = %TreeNode{
+        left: nil,
+        right: %TreeNode{left: nil, right: nil, val: 2_147_483_647},
+        val: -2_147_483_648
+      }
+
+      assert is_valid_bst(root)
+    end
+
+    test "input = root [2147483647,2147483647]" do
+      root = %TreeNode{
+        left: %TreeNode{left: nil, right: nil, val: 2_147_483_647},
+        right: nil,
+        val: 2_147_483_647
+      }
+
+      refute is_valid_bst(root)
     end
   end
 end
