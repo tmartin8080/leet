@@ -5,6 +5,7 @@ defmodule MedianSortedArraysTest do
   test "find_median_sorted_arrays/2" do
     assert find_median_sorted_arrays([1, 3], [2]) == 2
     assert find_median_sorted_arrays([1, 2], [3, 4]) == 2.5
+    assert find_median_sorted_arrays([2], []) == 2
   end
 
   test "any number is less than infinity" do
