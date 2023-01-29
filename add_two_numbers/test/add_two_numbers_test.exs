@@ -3,18 +3,65 @@ defmodule AddTwoNumbersTest do
   import AddTwoNumbers
 
   test "adds 3-digit lists" do
-    l1 = [2, 4, 3]
-    l2 = [5, 6, 4]
-    assert add_two_numbers(l1, l2) == [7, 0, 8]
+    l1 = %ListNode{next: %ListNode{next: %ListNode{next: nil, val: 3}, val: 4}, val: 2}
+    l2 = %ListNode{next: %ListNode{next: %ListNode{next: nil, val: 4}, val: 6}, val: 5}
+
+    assert add_two_numbers(l1, l2) == %ListNode{
+             val: 7,
+             next: %ListNode{val: 0, next: %ListNode{val: 8, next: nil}}
+           }
   end
 
   test "adds zero lists" do
-    assert add_two_numbers([0], [0]) == [0]
+    l1 = %ListNode{next: nil, val: 0}
+    l2 = %ListNode{next: nil, val: 0}
+    assert add_two_numbers(l1, l2) == %ListNode{val: 0, next: nil}
   end
 
   test "adds 9s lists" do
-    l1 = [9, 9, 9, 9, 9, 9, 9]
-    l2 = [9, 9, 9, 9]
-    assert add_two_numbers(l1, l2) == [8, 9, 9, 9, 0, 0, 0, 1]
+    l1 = %ListNode{
+      next: %ListNode{
+        next: %ListNode{
+          next: %ListNode{
+            next: %ListNode{
+              next: %ListNode{next: %ListNode{next: nil, val: 9}, val: 9},
+              val: 9
+            },
+            val: 9
+          },
+          val: 9
+        },
+        val: 9
+      },
+      val: 9
+    }
+
+    l2 = %ListNode{
+      next: %ListNode{
+        next: %ListNode{next: %ListNode{next: nil, val: 9}, val: 9},
+        val: 9
+      },
+      val: 9
+    }
+
+    assert add_two_numbers(l1, l2) == %ListNode{
+             val: 8,
+             next: %ListNode{
+               val: 9,
+               next: %ListNode{
+                 val: 9,
+                 next: %ListNode{
+                   val: 9,
+                   next: %ListNode{
+                     val: 0,
+                     next: %ListNode{
+                       val: 0,
+                       next: %ListNode{val: 0, next: %ListNode{val: 1, next: nil}}
+                     }
+                   }
+                 }
+               }
+             }
+           }
   end
 end
