@@ -1,21 +1,27 @@
 # MedianSortedArrays
 
-**TODO: Add description**
+Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
 
-## Installation
+The overall run time complexity should be O(log (m+n)).
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `median_sorted_arrays` to your list of dependencies in `mix.exs`:
+Example 1:
 
-```elixir
-def deps do
-  [
-    {:median_sorted_arrays, "~> 0.1.0"}
-  ]
-end
-```
+    Input: nums1 = [1,3], nums2 = [2]
+    Output: 2.00000
+    Explanation: merged array = [1,2,3] and median is 2.
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/median_sorted_arrays>.
+Example 2:
 
+    Input: nums1 = [1,2], nums2 = [3,4]
+    Output: 2.50000
+    Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.
+
+
+Constraints:
+
+    nums1.length == m
+    nums2.length == n
+    0 <= m <= 1000
+    0 <= n <= 1000
+    1 <= m + n <= 2000
+    -106 <= nums1[i], nums2[i] <= 106
