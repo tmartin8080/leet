@@ -2,10 +2,16 @@ defmodule MedianSortedArraysTest do
   use ExUnit.Case
   import MedianSortedArrays
 
-  test "find_median_sorted_arrays/2" do
-    assert find_median_sorted_arrays([1, 3], [2]) == 2
-    assert find_median_sorted_arrays([1, 2], [3, 4]) == 2.5
-    assert find_median_sorted_arrays([2], []) == 2
+  describe "find_median_sorted_arrays/2" do
+    test "general cases" do
+      assert find_median_sorted_arrays([1, 3], [2]) == 2
+      assert find_median_sorted_arrays([1, 2], [3, 4]) == 2.5
+      assert find_median_sorted_arrays([2], []) == 2
+    end
+
+    test "one empty list case" do
+      assert find_median_sorted_arrays([2], []) == 2
+    end
   end
 
   test "any number is less than infinity" do

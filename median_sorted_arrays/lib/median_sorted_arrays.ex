@@ -1,5 +1,14 @@
 defmodule MedianSortedArrays do
   @moduledoc """
+  Binary Search to parition arrays on left | right where all values on
+  left are < all values on the right.
+
+  # Notes
+  - When the size of merged inputs is even, take the median of the 2 center values.
+  - When the size of merged inputs is odd, take the middle value.
+  - If there are no values to compare, use -Infinity on left, and Infinity on right.
+
+  More details on solution: https://www.youtube.com/watch?v=LPFhl65R7ww
   """
 
   @negative_infinity :math.pow(10, 6) * -1
@@ -7,13 +16,7 @@ defmodule MedianSortedArrays do
 
   @spec find_median_sorted_arrays(nums1 :: [integer], nums2 :: [integer]) :: float
   def find_median_sorted_arrays(nums1, nums2) do
-    x = Enum.count(nums1)
-    y = Enum.count(nums2)
-
-    # reverse inputs if x > y
-    if x > y do
-      find_median_sorted_arrays(nums2, nums1)
-    end
+    {{nums1, x}, {nums2, y}} = order_arrays_by_size(nums1, nums2)
 
     low = 0
     high = y
@@ -35,8 +38,6 @@ defmodule MedianSortedArrays do
 
     y_min_right = if partition_y == y, do: @positive_infinity, else: Enum.at(nums2, partition_y)
 
-    dbg()
-
     cond do
       x_max_left <= y_min_right and y_max_left <= x_min_right ->
         if Integer.mod(x + y, 2) == 0 do
@@ -53,5 +54,14 @@ defmodule MedianSortedArrays do
         new_low = partition_x + 1
         find_median(new_low, high, {nums1, x}, {nums2, y})
     end
+  end
+
+  # reverse inputs if x > y
+  defp order_arrays_by_size(nums1, nums2) when length(nums1) > length(nums2) do
+    {{nums2, Enum.count(nums2)}, {nums1, Enum.count(nums1)}}
+  end
+
+  defp order_arrays_by_size(nums1, nums2) do
+    {{nums1, Enum.count(nums1)}, {nums2, Enum.count(nums2)}}
   end
 end
