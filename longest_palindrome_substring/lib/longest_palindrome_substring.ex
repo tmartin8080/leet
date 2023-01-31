@@ -1,31 +1,5 @@
 defmodule LongestPalindromeSubstring do
   @moduledoc """
-  class Solution {
-    public String longestPalindrome(String s) {
-        if (s == null || s.length() < 1) return "";
-        int start = 0, end = 0;
-        for (int i = 0; i < s.length(); i++) {
-            int len1 = expandAroundCenter(s, i, i);
-            int len2 = expandAroundCenter(s, i, i + 1);
-            int len = Math.max(len1, len2);
-            if (len > end - start) {
-                start = i - (len - 1) / 2;
-                end = i + len / 2;
-            }
-        }
-        return s.substring(start, end + 1);
-    }
-
-    private int expandAroundCenter(String s, int left, int right) {
-        int L = left, R = right;
-        while (L >= 0 && R < s.length() && s.charAt(L) == s.charAt(R)) {
-            L--;
-            R++;
-        }
-        return R - L - 1;
-    }
-  }
-
   # Javascript
   const longestPalindrome = s => {
     if(!s || s.length <= 1) {
@@ -57,19 +31,49 @@ defmodule LongestPalindromeSubstring do
   def longest_palindrome(s) when s == "" or is_nil(s), do: ""
 
   def longest_palindrome(s) do
-    start_index = 0
-    end_index = 0
-    chars = String.codepoints(s)
-    find_palindrome(chars, start_index, end_index)
+    index = 0
+    longest = String.slice(s, 0..1)
+    result = find_longest(s, longest, index)
   end
 
-  defp find_palindrome(s, start_index, end_index) do
-    dbg()
-    expand_around_center(s, 0, 0)
-    s
+  defp find_longest(s, longest, index) when length(s) == index - 1do
+    longest
   end
 
-  defp expand_around_center(s, left, right) do
-    dbg()
+  defp find_longest(s, longest, index) do
+    temp = expand(s, index, index)
+
+    longest =
+      if String.length(temp) > String.length(longest) do
+        temp
+      else
+        longest
+      end
+
+    temp = expand(s, index, index + 1)
+
+    longest =
+      if String.length(temp) > String.length(longest) do
+        temp
+      else
+        longest
+      end
+
+    longest
+    find_longest(s, longest, index + 1)
+  end
+
+  defp expand(s, left, right) do
+    {left, right} =
+      Enum.reduce(0..String.length(s), {0, 0}, fn _n, {left, right} = acc ->
+        if left > 0 and right <= String.length(s) - 1 and
+             String.at(s, left) == String.at(s, right) do
+          {left - 1, right + 1}
+        else
+          acc
+        end
+      end)
+
+    String.slice(s, left..right)
   end
 end
