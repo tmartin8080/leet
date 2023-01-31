@@ -4,7 +4,8 @@ defmodule LongestPalindromeSubstring do
   1. Set starting context
   2. Iterate over each char to expand_range (Expand Around Center)
   3. expand_range expands while palindrome is found, halts when not found
-  4. called twice, once for odd and once for even substrings.
+  4. called twice, once for odd and once for even substrings, overwrites context.
+  5. String -> Map for efficent lookup.
 
   ## Solution Details
   https://youtu.be/DK5OKKbF6GI
@@ -46,8 +47,7 @@ defmodule LongestPalindromeSubstring do
     string_length = String.length(s)
     context = %{start: 0, length: 0}
     range = Range.new(0, string_length - 1)
-    chars = build_hashmap(s)
-    dbg(chars)
+    chars = hashtable_from_string(s)
     find_longest(s, string_length, chars, range, context, start)
   end
 
@@ -89,7 +89,7 @@ defmodule LongestPalindromeSubstring do
     String.slice(s, range)
   end
 
-  defp build_hashmap(s) do
+  defp hashtable_from_string(s) do
     s
     |> String.codepoints()
     |> Enum.with_index()
