@@ -51,6 +51,7 @@ defmodule LongestPalindromeSubstring do
     {left, right} =
       Enum.reduce_while(range, {st, en}, fn _, {left, right} ->
         if left >= 0 and right < string_length - 1 and String.at(s, left) == String.at(s, right) do
+          dbg("pal")
           {:cont, {left - 1, right + 1}}
         else
           {:halt, {left, right}}
@@ -61,7 +62,7 @@ defmodule LongestPalindromeSubstring do
     dbg(left)
     dbg(right)
 
-    if context.length < left - right - 1 do
+    if context.length < right - left - 1 do
       %{start: left + 1, length: right - left - 1}
     else
       context
