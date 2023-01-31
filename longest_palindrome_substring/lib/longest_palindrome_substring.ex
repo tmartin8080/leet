@@ -29,35 +29,43 @@ defmodule LongestPalindromeSubstring do
   def longest_palindrome(s) do
     start = 0
     string_length = String.length(s)
-    result = %{start: 0, length: 1}
-    find_longest(s, string_length, result, start)
+    context = %{start: 0, length: 0}
+    find_longest(s, string_length, context, start)
   end
 
   # base case
-  defp find_longest(s, string_length, result, start) when start == string_length - 1 do
-    longest_from_range(s, result)
+  defp find_longest(s, string_length, context, start) when start == string_length - 1 do
+    longest_from_range(s, context)
   end
 
   # reduce case
-  defp find_longest(s, string_length, result, start) do
-    result = expand_range(s, string_length, start, start, result)
-    # range2 = expand_range(s, string_length, start, start + 1)
-    dbg(result)
-    find_longest(s, string_length, %{result_start: 1, result_length: 1}, start + 1)
+  defp find_longest(s, string_length, context, start) do
+    context = expand_range(s, string_length, start, start, context)
+    context = expand_range(s, string_length, start, start + 1, context)
+    find_longest(s, string_length, context, start + 1)
   end
 
-  defp expand_range(s, string_length, left, right, %{start: _start, length: _length}) do
-    string_length
-    |> dbg()
-    |> Stream.unfold(fn _ ->
-      if left >= right and right < string_length and String.at(s, left) == String.at(s, right) do
-        {left - 1, right + 1}
-      else
-        nil
-      end
-    end)
-    |> Stream.run()
-    |> dbg()
+  defp expand_range(s, string_length, st, en, context) do
+    range = 0..(string_length - 1)
+
+    {left, right} =
+      Enum.reduce_while(range, {st, en}, fn _, {left, right} ->
+        if left >= 0 and right < string_length - 1 and String.at(s, left) == String.at(s, right) do
+          {:cont, {left - 1, right + 1}}
+        else
+          {:halt, {left, right}}
+        end
+      end)
+
+    dbg(context)
+    dbg(left)
+    dbg(right)
+
+    if context.length < left - right - 1 do
+      %{start: left + 1, length: right - left - 1}
+    else
+      context
+    end
   end
 
   # defp get_longest(new_longest, current_longest) do
