@@ -1,5 +1,10 @@
 defmodule LongestPalindromeSubstring do
   @moduledoc """
+  ## Approach
+  1. Set starting context
+  2. Iterate over each char to expand_range (Expand Around Center)
+  3. expand_range expands while palindrome is found, halts when not found
+  4. called twice, once for odd and once for even substrings.
 
   ## Solution Details
   https://youtu.be/DK5OKKbF6GI
@@ -51,18 +56,22 @@ defmodule LongestPalindromeSubstring do
 
   defp expand_range(s, string_length, st, en, context) do
     range = 0..(string_length - 1)
+    chars = String.codepoints(s)
 
     {left, right} =
       Enum.reduce_while(range, {st, en}, fn _n, {left, right} ->
-        if left >= 0 and right < string_length and String.at(s, left) == String.at(s, right) do
+        if left >= 0 and right < string_length and Enum.at(chars, left) == Enum.at(chars, right) do
           {:cont, {left - 1, right + 1}}
         else
           {:halt, {left, right}}
         end
       end)
 
-    if context.length < right - left - 1 do
-      %{start: left + 1, length: right - left - 1}
+    new_start = left + 1
+    new_length = right - left - 1
+
+    if new_length > context.length do
+      %{context | start: new_start, length: new_length}
     else
       context
     end
