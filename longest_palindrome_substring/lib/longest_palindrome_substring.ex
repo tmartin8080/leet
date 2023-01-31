@@ -1,5 +1,10 @@
 defmodule LongestPalindromeSubstring do
   @moduledoc """
+
+  ## Solution Details
+  https://youtu.be/DK5OKKbF6GI
+
+  ## Java
   fn1(s) {
     int strLength = s.length()
     if (strLength < 2) { return s }
@@ -21,7 +26,6 @@ defmodule LongestPalindromeSubstring do
       resultLength = end - begin -1;
     }
   }
-
   """
   @spec longest_palindrome(s :: String.t()) :: String.t()
   def longest_palindrome(s) when s == "" or is_nil(s), do: ""
@@ -49,18 +53,13 @@ defmodule LongestPalindromeSubstring do
     range = 0..(string_length - 1)
 
     {left, right} =
-      Enum.reduce_while(range, {st, en}, fn _, {left, right} ->
-        if left >= 0 and right < string_length - 1 and String.at(s, left) == String.at(s, right) do
-          dbg("pal")
+      Enum.reduce_while(range, {st, en}, fn _n, {left, right} ->
+        if left >= 0 and right < string_length and String.at(s, left) == String.at(s, right) do
           {:cont, {left - 1, right + 1}}
         else
           {:halt, {left, right}}
         end
       end)
-
-    dbg(context)
-    dbg(left)
-    dbg(right)
 
     if context.length < right - left - 1 do
       %{start: left + 1, length: right - left - 1}
@@ -69,16 +68,8 @@ defmodule LongestPalindromeSubstring do
     end
   end
 
-  # defp get_longest(new_longest, current_longest) do
-  #   if String.length(new_longest) > String.length(current_longest) do
-  #     new_longest
-  #   else
-  #     current_longest
-  #   end
-  # end
-
   defp longest_from_range(s, %{start: start, length: length}) do
-    range = start..(start + length)
+    range = start..(start + length - 1)
     String.slice(s, range)
   end
 end
