@@ -1,21 +1,25 @@
 # LongestPalindromeSubstring
 
-**TODO: Add description**
+Reference: https://www.youtube.com/watch?v=DK5OKKbF6GI
 
-## Installation
+## Problem
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `longest_palindrome_substring` to your list of dependencies in `mix.exs`:
+Given a string s, return the longest palindromic substring in s.
 
-```elixir
-def deps do
-  [
-    {:longest_palindrome_substring, "~> 0.1.0"}
-  ]
-end
-```
+Example 1:
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/longest_palindrome_substring>.
+    Input: s = "babad"
+    Output: "bab"
+    Explanation: "aba" is also a valid answer.
+
+Example 2:
+
+    Input: s = "cbbd"
+    Output: "bb"
+ 
+
+Constraints:
+
+    1 <= s.length <= 1000
+    s consist of only digits and English letters.
 
