@@ -52,6 +52,8 @@ defmodule LongestPalindromeSubstring do
     |> Stream.unfold(fn _ ->
       if left >= right and right < string_length and String.at(s, left) == String.at(s, right) do
         {left - 1, right + 1}
+      else
+        nil
       end
     end)
     |> Stream.run()
