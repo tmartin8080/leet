@@ -45,28 +45,29 @@ defmodule LongestPalindromeSubstring do
     start = 0
     string_length = String.length(s)
     context = %{start: 0, length: 0}
-    find_longest(s, string_length, context, start)
+    range = Range.new(0, string_length - 1)
+    chars = build_hashmap(s)
+    dbg(chars)
+    find_longest(s, string_length, chars, range, context, start)
   end
 
   # base case
-  defp find_longest(s, string_length, context, start) when start == string_length - 1 do
+  defp find_longest(s, string_length, _chars, _range, context, start)
+       when start == string_length - 1 do
     longest_from_range(s, context)
   end
 
   # reduce case
-  defp find_longest(s, string_length, context, start) do
-    context = expand_range(s, string_length, start, start, context)
-    context = expand_range(s, string_length, start, start + 1, context)
-    find_longest(s, string_length, context, start + 1)
+  defp find_longest(s, string_length, chars, range, context, start) do
+    context = expand_range(s, string_length, chars, range, start, start, context)
+    context = expand_range(s, string_length, chars, range, start, start + 1, context)
+    find_longest(s, string_length, chars, range, context, start + 1)
   end
 
-  defp expand_range(s, string_length, st, en, context) do
-    range = 0..(string_length - 1)
-    chars = String.codepoints(s)
-
+  defp expand_range(_s, string_length, chars, range, st, en, context) do
     {left, right} =
       Enum.reduce_while(range, {st, en}, fn _n, {left, right} ->
-        if left >= 0 and right < string_length and Enum.at(chars, left) == Enum.at(chars, right) do
+        if left >= 0 and right < string_length and Map.get(chars, left) == Map.get(chars, right) do
           {:cont, {left - 1, right + 1}}
         else
           {:halt, {left, right}}
@@ -86,5 +87,15 @@ defmodule LongestPalindromeSubstring do
   defp longest_from_range(s, %{start: start, length: length}) do
     range = start..(start + length - 1)
     String.slice(s, range)
+  end
+
+  defp build_hashmap(s) do
+    s
+    |> String.codepoints()
+    |> Enum.with_index()
+    |> Enum.map(fn {char, index} ->
+      {index, char}
+    end)
+    |> Map.new()
   end
 end
