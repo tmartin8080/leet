@@ -3,9 +3,12 @@ defmodule LongestPalindromeSubstringTest do
   import LongestPalindromeSubstring
 
   describe "longest_palindrome/1" do
-    test "finds longest" do
+    test "finds longest a" do
       assert longest_palindrome("babad") == "bab"
-      # assert longest_palindrome("cbbd") == "bb"
+    end
+
+    test "finds longest b" do
+      assert longest_palindrome("cbbd") == "bb"
     end
   end
 end
