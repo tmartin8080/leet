@@ -25,4 +25,8 @@ defmodule MedianSortedArraysTest do
   test "sup with these numberss" do
     assert find_median_sorted_arrays([100_001], [100_000]) == 100_000.5
   end
+
+  test "another fun one" do
+    assert find_median_sorted_arrays([], [2, 3]) == 2.5
+  end
 end

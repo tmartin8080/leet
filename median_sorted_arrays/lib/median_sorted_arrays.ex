@@ -1,12 +1,12 @@
 defmodule MedianSortedArrays do
   @moduledoc """
-  Binary Search to parition arrays on left | right where all values on
+  Binary Search to partition arrays on left | right so all values on
   left are < all values on the right.
 
   # Notes
   - When the size of merged inputs is even, take the median of the 2 center values.
   - When the size of merged inputs is odd, take the middle value.
-  - If there are no values to compare, use -Infinity on left, and Infinity on right.
+  - If there are no values to compare, use -Infinity on left, and +Infinity on right.
 
   More details on solution: https://www.youtube.com/watch?v=LPFhl65R7ww
   """
@@ -35,6 +35,8 @@ defmodule MedianSortedArrays do
 
     a2_min_right =
       if a2_partition == n, do: @positive_infinity, else: :array.get(a2_partition, a2)
+
+    dbg()
 
     cond do
       a1_max_left <= a2_min_right and a2_max_left <= a1_min_right ->
