@@ -16,41 +16,41 @@ defmodule MedianSortedArrays do
 
   @spec find_median_sorted_arrays(nums1 :: [integer], nums2 :: [integer]) :: float
   def find_median_sorted_arrays(nums1, nums2) do
-    {{nums1, m}, {nums2, n}} = shortest_first(nums1, nums2)
+    {{a1, m}, {a2, n}} = shortest_first(nums1, nums2)
     range = {0, m}
-    find_median(range, {nums1, m}, {nums2, n})
+    find_median(range, {a1, m}, {a2, n})
   end
 
-  defp find_median({low, high}, {nums1, m}, {nums2, n}) do
-    {partition_m, partition_n} = partition_arrays({low, high}, m, n)
+  defp find_median({low, high}, {a1, m}, {a2, n}) do
+    {a1_partition, a2_partition} = partition_arrays({low, high}, m, n)
 
-    m_max_left =
-      if partition_m == 0, do: @negative_infinity, else: :array.get(partition_m - 1, nums1)
+    a1_max_left =
+      if a1_partition == 0, do: @negative_infinity, else: :array.get(a1_partition - 1, a1)
 
-    m_min_right =
-      if partition_m == m, do: @positive_infinity, else: :array.get(partition_m, nums1)
+    a1_min_right =
+      if a1_partition == m, do: @positive_infinity, else: :array.get(a1_partition, a1)
 
-    n_max_left =
-      if partition_n == 0, do: @negative_infinity, else: :array.get(partition_n - 1, nums2)
+    a2_max_left =
+      if a2_partition == 0, do: @negative_infinity, else: :array.get(a2_partition - 1, a2)
 
-    n_min_right =
-      if partition_n == n, do: @positive_infinity, else: :array.get(partition_n, nums2)
+    a2_min_right =
+      if a2_partition == n, do: @positive_infinity, else: :array.get(a2_partition, a2)
 
     cond do
-      m_max_left <= n_min_right and n_max_left <= m_min_right ->
+      a1_max_left <= a2_min_right and a2_max_left <= a1_min_right ->
         if Integer.mod(m + n, 2) == 0 do
-          (max(n_max_left, m_max_left) + min(m_min_right, n_min_right)) / 2
+          (max(a2_max_left, a1_max_left) + min(a1_min_right, a2_min_right)) / 2
         else
-          max(m_max_left, n_max_left)
+          max(a1_max_left, a2_max_left)
         end
 
-      m_max_left > n_min_right ->
-        new_high = partition_m - 1
-        find_median({low, new_high}, {nums1, m}, {nums2, n})
+      a1_max_left > a2_min_right ->
+        new_high = a2_partition - 1
+        find_median({low, new_high}, {a1, m}, {a2, n})
 
       true ->
-        new_low = partition_m + 1
-        find_median({new_low, high}, {nums1, m}, {nums2, n})
+        new_low = a1_partition + 1
+        find_median({new_low, high}, {a1, m}, {a2, n})
     end
   end
 
