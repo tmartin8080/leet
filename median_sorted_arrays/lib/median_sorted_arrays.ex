@@ -16,52 +16,61 @@ defmodule MedianSortedArrays do
 
   @spec find_median_sorted_arrays(nums1 :: [integer], nums2 :: [integer]) :: float
   def find_median_sorted_arrays(nums1, nums2) do
-    {{nums1, x}, {nums2, y}} = order_arrays_by_size(nums1, nums2)
-
-    low = 0
-    high = y
-
-    find_median(low, high, {nums1, x}, {nums2, y})
+    {{nums1, m}, {nums2, n}} = shortest_first(nums1, nums2)
+    range = {0, m}
+    find_median(range, {nums1, m}, {nums2, n})
   end
 
-  defp find_median(low, high, {nums1, x}, {nums2, y}) do
-    partition_x = round((low + high) / 2)
-    partition_y = round((x + y) / 2 - partition_x)
+  defp find_median({low, high}, {nums1, m}, {nums2, n}) do
+    {partition_m, partition_n} = partition_arrays({low, high}, m, n)
 
-    x_max_left =
-      if partition_x == 0, do: @negative_infinity, else: Enum.at(nums1, partition_x - 1)
+    m_max_left =
+      if partition_m == 0, do: @negative_infinity, else: :array.get(partition_m - 1, nums1)
 
-    x_min_right = if partition_x == x, do: @positive_infinity, else: Enum.at(nums1, partition_x)
+    m_min_right =
+      if partition_m == m, do: @positive_infinity, else: :array.get(partition_m, nums1)
 
-    y_max_left =
-      if partition_y == 0, do: @negative_infinity, else: Enum.at(nums2, partition_y - 1)
+    n_max_left =
+      if partition_n == 0, do: @negative_infinity, else: :array.get(partition_n - 1, nums2)
 
-    y_min_right = if partition_y == y, do: @positive_infinity, else: Enum.at(nums2, partition_y)
+    n_min_right =
+      if partition_n == n, do: @positive_infinity, else: :array.get(partition_n, nums2)
 
     cond do
-      x_max_left <= y_min_right and y_max_left <= x_min_right ->
-        if Integer.mod(x + y, 2) == 0 do
-          (max(x_max_left, y_max_left) + min(x_min_right, y_min_right)) / 2
+      m_max_left <= n_min_right and n_max_left <= m_min_right ->
+        if Integer.mod(m + n, 2) == 0 do
+          (max(n_max_left, m_max_left) + min(m_min_right, n_min_right)) / 2
         else
-          max(x_max_left, y_max_left)
+          max(m_max_left, n_max_left)
         end
 
-      x_max_left > y_min_right ->
-        new_high = partition_x - 1
-        find_median(low, new_high, {nums1, x}, {nums2, y})
+      m_max_left > n_min_right ->
+        new_high = partition_m - 1
+        find_median({low, new_high}, {nums1, m}, {nums2, n})
 
       true ->
-        new_low = partition_x + 1
-        find_median(new_low, high, {nums1, x}, {nums2, y})
+        new_low = partition_m + 1
+        find_median({new_low, high}, {nums1, m}, {nums2, n})
     end
   end
 
-  # reverse inputs if x > y
-  defp order_arrays_by_size(nums1, nums2) when length(nums1) > length(nums2) do
-    {{nums2, Enum.count(nums2)}, {nums1, Enum.count(nums1)}}
+  # convert to actual arrays and sort by ascending length
+  defp shortest_first(nums1, nums2) do
+    nums1 = :array.from_list(nums1)
+    nums2 = :array.from_list(nums2)
+    nums1_length = :array.size(nums1)
+    nums2_length = :array.size(nums2)
+
+    if nums1_length <= nums2_length do
+      {{nums1, nums1_length}, {nums2, nums2_length}}
+    else
+      {{nums2, nums2_length}, {nums1, nums1_length}}
+    end
   end
 
-  defp order_arrays_by_size(nums1, nums2) do
-    {{nums1, Enum.count(nums1)}, {nums2, Enum.count(nums2)}}
+  defp partition_arrays({low, high}, m, n) do
+    partition_m = round((low + high) / 2)
+    partition_n = round((m + n) / 2 - partition_m)
+    {partition_m, partition_n}
   end
 end
