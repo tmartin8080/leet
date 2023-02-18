@@ -21,4 +21,8 @@ defmodule MedianSortedArraysTest do
   test "any number is greater than neg infinity" do
     assert -2 > :math.pow(10, 6) * -1
   end
+
+  test "sup with these numberss" do
+    assert find_median_sorted_arrays([100_001], [100_000]) == 100_000.5
+  end
 end

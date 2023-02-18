@@ -17,7 +17,7 @@ defmodule MedianSortedArrays do
   @spec find_median_sorted_arrays(nums1 :: [integer], nums2 :: [integer]) :: float
   def find_median_sorted_arrays(nums1, nums2) do
     {{a1, m}, {a2, n}} = shortest_first(nums1, nums2)
-    range = {0, m}
+    range = {0, m - 1}
     find_median(range, {a1, m}, {a2, n})
   end
 
@@ -71,6 +71,6 @@ defmodule MedianSortedArrays do
   defp partition_arrays({low, high}, m, n) do
     partition_m = round((low + high) / 2)
     partition_n = round((m + n) / 2 - partition_m)
-    {partition_m, partition_n}
+    {max(partition_m, 0), max(partition_n, 0)}
   end
 end
