@@ -1,18 +1,18 @@
 defmodule MedianSortedArrays do
   @moduledoc """
-  Binary Search to partition arrays on left | right so all values on
-  left are < all values on the right.
-
-  # Notes
-  - When the size of merged inputs is even, take the median of the 2 center values.
-  - When the size of merged inputs is odd, take the middle value.
-  - If there are no values to compare, use -Infinity on left, and +Infinity on right.
+  1. Start with the shortest array
+  2. Partition arrays on `left` | `right` so all values on left are < all values on the right.
+    - If there are no values to compare, use -Infinity on left, and +Infinity on right.
+    - Shift partitioning left, right until true.
+  3. Median - Odd vs Even
+    - When the size of combined arrays is even, take the max of left values.
+    - When the size of combined arrays is odd, take the average of max_left + max_right values.
 
   More details on solution: https://www.youtube.com/watch?v=LPFhl65R7ww
   """
 
-  @negative_infinity :math.pow(10, 6) * -1
-  @positive_infinity :math.pow(10, 6)
+  @neginf :math.pow(10, 6) * -1
+  @posinf :math.pow(10, 6)
 
   @spec find_median_sorted_arrays(nums1 :: [integer], nums2 :: [integer]) :: float
   def find_median_sorted_arrays(nums1, nums2) do
@@ -22,33 +22,36 @@ defmodule MedianSortedArrays do
   end
 
   defp find_median({low, high}, {a1, m}, {a2, n}) do
+    dbg("START ITERATION | low: #{low} | high: #{high}")
     {a1_partition, a2_partition} = partition_arrays({low, high}, m, n)
+    dbg(a1_partition)
+    dbg(a2_partition)
 
-    a1_max_left =
-      if a1_partition == 0, do: @negative_infinity, else: :array.get(a1_partition - 1, a1)
-
-    a1_min_right =
-      if a1_partition == m, do: @positive_infinity, else: :array.get(a1_partition, a1)
-
-    a2_max_left =
-      if a2_partition == 0, do: @negative_infinity, else: :array.get(a2_partition - 1, a2)
-
-    a2_min_right =
-      if a2_partition == n, do: @positive_infinity, else: :array.get(a2_partition, a2)
+    a1_max_left = if a1_partition == 0, do: @neginf, else: :array.get(a1_partition - 1, a1)
+    a1_min_right = if a1_partition == m, do: @posinf, else: :array.get(a1_partition, a1)
+    a2_max_left = if a2_partition == 0, do: @neginf, else: :array.get(a2_partition - 1, a2)
+    a2_min_right = if a2_partition == n, do: @posinf, else: :array.get(a2_partition, a2)
+    dbg(a1_max_left)
+    dbg(a2_max_left)
 
     cond do
       a1_max_left <= a2_min_right and a2_max_left <= a1_min_right ->
+        max_left = max(a1_max_left, a2_max_left)
+        min_right = min(a1_min_right, a2_min_right)
+
         if Integer.mod(m + n, 2) == 0 do
-          (max(a2_max_left, a1_max_left) + min(a1_min_right, a2_min_right)) / 2
+          (max_left + min_right) / 2
         else
-          max(a1_max_left, a2_max_left)
+          max_left
         end
 
       a1_max_left > a2_min_right ->
+        dbg("shift left")
         new_high = a1_partition - 1
         find_median({low, new_high}, {a1, m}, {a2, n})
 
       true ->
+        dbg("shift right")
         new_low = a1_partition + 1
         find_median({new_low, high}, {a1, m}, {a2, n})
     end

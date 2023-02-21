@@ -8,6 +8,7 @@ defmodule MedianSortedArraysTest do
       assert find_median_sorted_arrays([2], []) == 2
       assert find_median_sorted_arrays([], [2, 3]) == 2.5
       assert find_median_sorted_arrays([100_001], [100_000]) == 100_000.5
+      assert find_median_sorted_arrays([1, 2], [3, 4]) == 2.5
     end
 
     test "one empty list case" do
@@ -24,7 +25,6 @@ defmodule MedianSortedArraysTest do
   end
 
   test "another fun one" do
-    assert find_median_sorted_arrays([1, 2], [3, 4]) == 2.5
-    # assert find_median_sorted_arrays([4, 5], [1, 2, 3]) == 100_000.5
+    assert find_median_sorted_arrays([4, 7, 15, 18, 31], [3, 9, 10, 12, 23, 34]) == 12
   end
 end
