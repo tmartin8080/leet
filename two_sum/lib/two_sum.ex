@@ -38,6 +38,7 @@ defmodule TwoSum do
   def two_sum(nums, target) do
     nums
     |> Enum.with_index()
+    |> dbg()
     |> Enum.reduce_while(%{}, fn {num, index}, acc ->
       diff = target - num
 
