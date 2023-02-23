@@ -14,5 +14,13 @@ defmodule ExpandCenterTest do
     test "non-palindrome returns false" do
       refute is_palindrome?("adffdl")
     end
+
+    test "long, odd palindrome returns true" do
+      assert is_palindrome?("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
+    end
+
+    test "long, even palindrome returns true" do
+      assert is_palindrome?("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
+    end
   end
 end
