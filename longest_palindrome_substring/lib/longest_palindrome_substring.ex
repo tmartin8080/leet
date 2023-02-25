@@ -72,7 +72,7 @@ defmodule LongestPalindromeSubstring do
       IO.inspect("-----> expand_range :is_palindrome | current: #{slice(s, longest)}")
       new_longest = update_longest({left, right}, longest)
 
-      expand_range(data, max(left - 1, 0), min(right + 1, n), new_longest)
+      expand_range(data, left - 1, right + 1, new_longest)
     else
       IO.inspect(
         "-----> expand_range :no_palindrome | longest: #{inspect(longest)} | value: #{slice(s, longest)}"
