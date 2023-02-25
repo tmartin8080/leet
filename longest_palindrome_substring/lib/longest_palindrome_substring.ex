@@ -21,9 +21,8 @@ defmodule LongestPalindromeSubstring do
   def longest_palindrome(s) when s == "" or is_nil(s), do: ""
 
   def longest_palindrome(s) do
-    index = 0
     n = String.length(s) - 1
-    find_longest({s, n}, index, {0, 0})
+    find_longest({s, n}, 0, {0, 0})
   end
 
   defp find_longest({s, n}, index, {left, right}) when index > n do

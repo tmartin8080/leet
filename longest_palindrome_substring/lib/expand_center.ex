@@ -1,6 +1,5 @@
 defmodule ExpandCenter do
   def is_palindrome?(s) do
-    dbg("start #{s}")
     string_length = String.length(s)
     window = find_center(string_length)
     expand(s, window)
@@ -11,8 +10,6 @@ defmodule ExpandCenter do
   defp expand(_s, {left, _right}) when left < 0, do: true
 
   defp expand(s, {left, right}) do
-    dbg("step")
-
     if String.at(s, left) == String.at(s, right) do
       expand(s, {left - 1, right + 1})
     else
