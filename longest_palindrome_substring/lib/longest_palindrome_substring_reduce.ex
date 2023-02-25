@@ -1,2 +1,0 @@
-defmodule LongestPalindromeSubstringReduce do
-end
