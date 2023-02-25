@@ -44,7 +44,7 @@ defmodule LongestPalindromeSubstring do
     longest = expand_range(data, index, index, longest)
     IO.inspect("---> checking even")
     longest = expand_range(data, index, index + 1, longest)
-    IO.inspect("-> find_longest :result | #{inspect(longest)} | #{slice(elem(data, 0), longest)}")
+    IO.inspect("<- find_longest :result | #{inspect(longest)} | #{slice(elem(data, 0), longest)}")
     find_longest(data, index + 1, longest)
   end
 
@@ -54,8 +54,8 @@ defmodule LongestPalindromeSubstring do
     )
 
     new_left = max(left - 1, 0)
-    new_right = min(right + 1, n - 1)
-    expand_range(data, new_left, new_right, {new_left, new_right})
+    new_right = min(right + 1, n)
+    expand_range(data, new_left, new_right, longest)
   end
 
   defp expand_range({s, n} = data, left, right, longest) when left < right do
@@ -67,11 +67,8 @@ defmodule LongestPalindromeSubstring do
     )
 
     if String.at(s, left) == String.at(s, right) do
+      IO.inspect("-----> expand_range :is_palindrome | current: #{slice(s, longest)}")
       new_longest = update_longest({left, right}, longest)
-
-      IO.inspect(
-        "-----> expand_range :is_palindrome | new_longest: #{inspect(new_longest)} | value: #{slice(s, new_longest)}"
-      )
 
       expand_range(data, max(left - 1, 0), min(right + 1, n), new_longest)
     else
@@ -83,21 +80,11 @@ defmodule LongestPalindromeSubstring do
     end
   end
 
-  # defp expand_range(data, left, right, longest), do
-  #   dbg()
-  #   IO.inspect("-> expand_range :init | #{left} | #{right} | #{inspect(longest)} | #{slice(elem(data, 0), longest)}")
-  #   longest
-  # end
-
   defp slice(s, {left, right}) do
-    String.slice(s, left, right)
+    String.slice(s, left..right)
   end
 
-  defp update_longest({a, b}, {c, d}) do
-    if c - d >= b - a do
-      {c, d}
-    else
-      {a, b}
-    end
-  end
+  # keep first one found in case of even
+  defp update_longest({a, b}, {c, d} = longest) when d - c >= b - a, do: longest
+  defp update_longest(new, _longest), do: new
 end
