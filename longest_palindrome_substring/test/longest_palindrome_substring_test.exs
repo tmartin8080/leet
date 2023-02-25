@@ -24,5 +24,10 @@ defmodule LongestPalindromeSubstringTest do
 
       assert longest_palindrome(s) == s
     end
+
+    test "longest palindrome" do
+      s = "saippuakivikauppias"
+      assert longest_palindrome(s) == s
+    end
   end
 end
