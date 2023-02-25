@@ -46,7 +46,6 @@ defmodule LongestPalindromeSubstring do
     longest = expand_range(data, index, index + 1, longest)
     IO.inspect("<- find_longest :result | #{inspect(longest)} | #{slice(elem(data, 0), longest)}")
 
-    Process.sleep(5_000)
     find_longest(data, index + 1, longest)
   end
 
@@ -60,7 +59,7 @@ defmodule LongestPalindromeSubstring do
     expand_range(data, new_left, new_right, longest)
   end
 
-  defp expand_range({s, n} = data, left, right, longest) when left < right do
+  defp expand_range({s, n} = data, left, right, longest) when left >= 0 and right < n do
     left_string = String.at(s, left)
     right_string = String.at(s, right)
 
@@ -81,6 +80,8 @@ defmodule LongestPalindromeSubstring do
       longest
     end
   end
+
+  defp expand_range(_data, _left, _right, longest), do: longest
 
   defp slice(s, {left, right}) do
     String.slice(s, left..right)
