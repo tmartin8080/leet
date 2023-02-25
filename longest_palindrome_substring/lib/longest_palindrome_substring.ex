@@ -45,6 +45,8 @@ defmodule LongestPalindromeSubstring do
     IO.inspect("---> checking even")
     longest = expand_range(data, index, index + 1, longest)
     IO.inspect("<- find_longest :result | #{inspect(longest)} | #{slice(elem(data, 0), longest)}")
+
+    Process.sleep(5_000)
     find_longest(data, index + 1, longest)
   end
 
