@@ -22,42 +22,82 @@ defmodule LongestPalindromeSubstring do
 
   def longest_palindrome(s) do
     index = 0
-    n = String.length(s)
-    find_longest({s, n}, index, {0, 1})
+    n = String.length(s) - 1
+    IO.inspect("============================ starting - #{s} ============================")
+    find_longest({s, n}, index, {0, 0})
   end
 
   defp find_longest({s, n}, index, {left, right}) when index > n do
-    String.slice(s, left, right)
+    IO.inspect(
+      "============================ done | index: #{index} | n: #{n} ============================"
+    )
+
+    String.slice(s, left..right)
   end
 
   defp find_longest(data, index, longest) do
+    IO.inspect(
+      "-> find_longest | index: #{inspect(index)} | longest: #{inspect(longest)} | value: #{slice(elem(data, 0), longest)}"
+    )
+
+    IO.inspect("---> checking odd")
     longest = expand_range(data, index, index, longest)
+    IO.inspect("---> checking even")
     longest = expand_range(data, index, index + 1, longest)
+    IO.inspect("-> find_longest :result | #{inspect(longest)} | #{slice(elem(data, 0), longest)}")
     find_longest(data, index + 1, longest)
   end
 
-  defp expand_range(data, left, right, longest) when left >= 0 and left == right do
-    expand_range(data, left, right, longest)
+  defp expand_range({s, n} = data, left, right, longest) when left == right do
+    IO.inspect(
+      "-----> expand_range :odd | left: #{left} | right: #{right} | longest: #{inspect(longest)} | value: #{slice(s, longest)}"
+    )
+
+    new_left = max(left - 1, 0)
+    new_right = min(right + 1, n - 1)
+    expand_range(data, new_left, new_right, {new_left, new_right})
   end
 
-  defp expand_range({s, n} = data, left, right, longest) when left >= 0 and right < n do
+  defp expand_range({s, n} = data, left, right, longest) when left < right do
+    left_string = String.at(s, left)
+    right_string = String.at(s, right)
+
+    IO.inspect(
+      "-----> expand_range :init | left: #{left} - #{left_string} | right: #{right} - #{right_string} | longest: #{inspect(longest)} | value: #{slice(s, longest)}"
+    )
+
     if String.at(s, left) == String.at(s, right) do
-      new_longest = {left, right}
-      log(longest, new_longest)
-      expand_range(data, left - 1, right + 1, new_longest)
+      new_longest = update_longest({left, right}, longest)
+
+      IO.inspect(
+        "-----> expand_range :is_palindrome | new_longest: #{inspect(new_longest)} | value: #{slice(s, new_longest)}"
+      )
+
+      expand_range(data, max(left - 1, 0), min(right + 1, n), new_longest)
     else
-      log(longest)
+      IO.inspect(
+        "-----> expand_range :no_palindrome | longest: #{inspect(longest)} | value: #{slice(s, longest)}"
+      )
+
       longest
     end
   end
 
-  defp expand_range(_data, _left, _right, longest), do: longest
+  # defp expand_range(data, left, right, longest), do
+  #   dbg()
+  #   IO.inspect("-> expand_range :init | #{left} | #{right} | #{inspect(longest)} | #{slice(elem(data, 0), longest)}")
+  #   longest
+  # end
 
-  defp log(longest) do
-    Logger.debug("NOT | longest: #{inspect(longest)}")
+  defp slice(s, {left, right}) do
+    String.slice(s, left, right)
   end
 
-  defp log(longest, new_longest) do
-    Logger.debug("PAL | longest: #{inspect(longest)} | new_longest: #{inspect(new_longest)}")
+  defp update_longest({a, b}, {c, d}) do
+    if c - d >= b - a do
+      {c, d}
+    else
+      {a, b}
+    end
   end
 end
