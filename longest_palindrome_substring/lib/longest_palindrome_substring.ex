@@ -43,59 +43,34 @@ defmodule LongestPalindromeSubstring do
   def longest_palindrome(s) when s == "" or is_nil(s), do: ""
 
   def longest_palindrome(s) do
-    start = 0
-    string_length = String.length(s)
-    context = %{start: 0, length: 0}
-    range = Range.new(0, string_length - 1)
-    chars = hashtable_from_string(s)
-    find_longest(s, string_length, chars, range, context, start)
+    index = 0
+    n = String.length(s)
+    find_longest({s, n}, index, {0, 1})
   end
 
-  # base case
-  defp find_longest(s, string_length, _chars, _range, context, start)
-       when start == string_length - 1 do
-    longest_from_range(s, context)
+  defp find_longest({s, n}, index, {left, right}) when index > n do
+    dbg()
+    String.slice(s, left, right)
   end
 
-  # reduce case
-  defp find_longest(s, string_length, chars, range, context, start) do
-    context = expand_range(s, string_length, chars, range, start, start, context)
-    context = expand_range(s, string_length, chars, range, start, start + 1, context)
-    find_longest(s, string_length, chars, range, context, start + 1)
+  defp find_longest(data, index, longest) do
+    longest = expand_range(data, index, index, longest)
+    longest = expand_range(data, index, index + 1, longest)
+    find_longest(data, index + 1, longest)
   end
 
-  defp expand_range(_s, string_length, chars, range, st, en, context) do
-    {left, right} =
-      Enum.reduce_while(range, {st, en}, fn _n, {left, right} ->
-        if left >= 0 and right < string_length and Map.get(chars, left) == Map.get(chars, right) do
-          {:cont, {left - 1, right + 1}}
-        else
-          {:halt, {left, right}}
-        end
-      end)
+  defp expand_range(data, left, right, longest) when left == right do
+    expand_range(data, left - 1, right + 1, longest)
+  end
 
-    new_start = left + 1
-    new_length = right - left - 1
-
-    if new_length > context.length do
-      %{context | start: new_start, length: new_length}
+  defp expand_range({s, _n} = data, left, right, longest) when left > 0 do
+    if String.at(s, left) == String.at(s, right) do
+      new_longest = {left, right}
+      expand_range(data, left - 1, right + 1, new_longest)
     else
-      context
+      longest
     end
   end
 
-  defp longest_from_range(s, %{start: start, length: length}) do
-    range = start..(start + length - 1)
-    String.slice(s, range)
-  end
-
-  defp hashtable_from_string(s) do
-    s
-    |> String.codepoints()
-    |> Enum.with_index()
-    |> Enum.map(fn {char, index} ->
-      {index, char}
-    end)
-    |> Map.new()
-  end
+  defp expand_range(_data, _left, _right, longest), do: longest
 end

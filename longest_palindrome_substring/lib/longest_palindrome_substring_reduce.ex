@@ -1,4 +1,4 @@
-defmodule LongestPalindromeSubstringArray do
+defmodule LongestPalindromeSubstringReduce do
   @moduledoc """
   ## Approach
   1. Set starting context
@@ -47,7 +47,7 @@ defmodule LongestPalindromeSubstringArray do
     string_length = String.length(s)
     context = %{start: 0, length: 0}
     range = Range.new(0, string_length - 1)
-    chars = string_to_array(s)
+    chars = string_to_map(s)
     find_longest(s, string_length, chars, range, context, start)
   end
 
@@ -67,8 +67,7 @@ defmodule LongestPalindromeSubstringArray do
   defp expand_range(_s, string_length, chars, range, st, en, context) do
     {left, right} =
       Enum.reduce_while(range, {st, en}, fn _n, {left, right} ->
-        if left >= 0 and right < string_length and
-             :array.get(left, chars) == :array.get(right, chars) do
+        if left >= 0 and right < string_length and Map.get(chars, left) == Map.get(chars, right) do
           {:cont, {left - 1, right + 1}}
         else
           {:halt, {left, right}}
@@ -90,12 +89,13 @@ defmodule LongestPalindromeSubstringArray do
     String.slice(s, range)
   end
 
-  defp string_to_array(s) do
+  defp string_to_map(s) do
     s
     |> String.codepoints()
     |> Enum.with_index()
-    |> Enum.reduce(:array.new(), fn {char, index}, arr ->
-      :array.set(index, char, arr)
+    |> Enum.reduce({%{}, 0}, fn char, {acc, index} ->
+      new_map = Map.put(acc, index, char)
+      {acc, index + 1}
     end)
   end
 end
