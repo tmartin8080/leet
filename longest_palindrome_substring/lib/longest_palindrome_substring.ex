@@ -15,30 +15,8 @@ defmodule LongestPalindromeSubstring do
   ```
   mix profile.eprof -e "LongestPalindromeSubstring.longest_palindrome(\"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz\")"
   ```
-
-  ## Java
-  fn1(s) {
-    int strLength = s.length()
-    if (strLength < 2) { return s }
-    for (int start = 0, start < strLength -1; start++) {
-      expandRange(s, start, start)
-      expandRange(s, start, start + 1)
-    }
-    return s.substring(resultStart, resultStart + resultLength)
-  }
-
-  expandRange(str, begin, end) {
-    while (begin >= 0 && end < str.length() && str.charAt(begin) == str.charAt(end)) {
-      begin--;
-      end++;
-    }
-
-    if (resultLength < end - begin -1) {
-      resultStart = begin + 1;
-      resultLength = end - begin -1;
-    }
-  }
   """
+  require Logger
   @spec longest_palindrome(s :: String.t()) :: String.t()
   def longest_palindrome(s) when s == "" or is_nil(s), do: ""
 
@@ -58,18 +36,28 @@ defmodule LongestPalindromeSubstring do
     find_longest(data, index + 1, longest)
   end
 
-  defp expand_range(data, left, right, longest) when left == right do
-    expand_range(data, left - 1, right + 1, longest)
+  defp expand_range(data, left, right, longest) when left >= 0 and left == right do
+    expand_range(data, left, right, longest)
   end
 
-  defp expand_range({s, n} = data, left, right, longest) when left > 0 and right < n do
+  defp expand_range({s, n} = data, left, right, longest) when left >= 0 and right < n do
     if String.at(s, left) == String.at(s, right) do
       new_longest = {left, right}
+      log(longest, new_longest)
       expand_range(data, left - 1, right + 1, new_longest)
     else
+      log(longest)
       longest
     end
   end
 
   defp expand_range(_data, _left, _right, longest), do: longest
+
+  defp log(longest) do
+    Logger.debug("NOT | longest: #{inspect(longest)}")
+  end
+
+  defp log(longest, new_longest) do
+    Logger.debug("PAL | longest: #{inspect(longest)} | new_longest: #{inspect(new_longest)}")
+  end
 end
