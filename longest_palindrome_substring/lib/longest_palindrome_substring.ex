@@ -21,11 +21,11 @@ defmodule LongestPalindromeSubstring do
   def longest_palindrome(s) when s == "" or is_nil(s), do: ""
 
   def longest_palindrome(s) do
-    {array, n} = to_array(s)
-    find_longest({s, array, n}, 0, {0, 0})
+    {chars, n} = to_map(s)
+    find_longest({s, chars, n}, 0, {0, 0})
   end
 
-  defp find_longest({s, _array, n}, index, {left, right}) when index > n do
+  defp find_longest({s, _chars, n}, index, {left, right}) when index > n do
     String.slice(s, left..right)
   end
 
@@ -35,14 +35,14 @@ defmodule LongestPalindromeSubstring do
     find_longest(data, index + 1, longest)
   end
 
-  defp expand_range({_s, _array, n} = data, left, right, longest) when left == right do
+  defp expand_range({_s, _chars, n} = data, left, right, longest) when left == right do
     new_left = max(left - 1, 0)
     new_right = min(right + 1, n)
     expand_range(data, new_left, new_right, longest)
   end
 
-  defp expand_range({_s, array, n} = data, left, right, longest) when left >= 0 and right <= n do
-    if :array.get(left, array) == :array.get(right, array) do
+  defp expand_range({_s, chars, n} = data, left, right, longest) when left >= 0 and right <= n do
+    if Map.get(chars, left) == Map.get(chars, right) do
       new_longest = update_longest({left, right}, longest)
 
       expand_range(data, left - 1, right + 1, new_longest)
@@ -57,12 +57,12 @@ defmodule LongestPalindromeSubstring do
   defp update_longest({a, b}, {c, d} = longest) when d - c >= b - a, do: longest
   defp update_longest(new, _longest), do: new
 
-  defp to_array(s) do
+  defp to_map(s) do
     s
     |> String.codepoints()
-    |> Enum.reduce({:array.new(), 0}, fn char, {array, index} ->
-      new_array = :array.set(index, char, array)
-      {new_array, index + 1}
+    |> Enum.reduce({%{}, 0}, fn char, {map, index} ->
+      new_map = Map.put(map, index, char)
+      {new_map, index + 1}
     end)
   end
 end
