@@ -59,7 +59,7 @@ defmodule LongestPalindromeSubstring do
     expand_range(data, new_left, new_right, longest)
   end
 
-  defp expand_range({s, n} = data, left, right, longest) when left >= 0 and right < n do
+  defp expand_range({s, n} = data, left, right, longest) when left >= 0 and right <= n do
     left_string = String.at(s, left)
     right_string = String.at(s, right)
 
