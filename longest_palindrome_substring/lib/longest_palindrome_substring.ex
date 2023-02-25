@@ -49,7 +49,6 @@ defmodule LongestPalindromeSubstring do
   end
 
   defp find_longest({s, n}, index, {left, right}) when index > n do
-    dbg()
     String.slice(s, left, right)
   end
 
@@ -63,7 +62,7 @@ defmodule LongestPalindromeSubstring do
     expand_range(data, left - 1, right + 1, longest)
   end
 
-  defp expand_range({s, _n} = data, left, right, longest) when left > 0 do
+  defp expand_range({s, n} = data, left, right, longest) when left > 0 and right < n do
     if String.at(s, left) == String.at(s, right) do
       new_longest = {left, right}
       expand_range(data, left - 1, right + 1, new_longest)

@@ -4,7 +4,8 @@ defmodule LongestPalindromeSubstringTest do
 
   describe "longest_palindrome/1" do
     test "finds longest a" do
-      assert longest_palindrome("babad") == "bab"
+      result = longest_palindrome("babad")
+      assert Enum.member?(["aba", "bab"], result)
     end
 
     test "finds longest b" do
