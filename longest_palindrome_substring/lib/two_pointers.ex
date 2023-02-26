@@ -9,7 +9,6 @@ defmodule TwoPointers do
   defp check_pointers(s, {low, high}) do
     left = String.at(s, low)
     right = String.at(s, high)
-    dbg()
 
     if left == right do
       check_pointers(s, {low + 1, high - 1})

@@ -15,87 +15,54 @@ defmodule LongestPalindromeSubstringArray do
   ```
   mix profile.eprof -e "LongestPalindromeSubstring.longest_palindrome(\"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz\")"
   ```
-
-  ## Java
-  fn1(s) {
-    int strLength = s.length()
-    if (strLength < 2) { return s }
-    for (int start = 0, start < strLength -1; start++) {
-      expandRange(s, start, start)
-      expandRange(s, start, start + 1)
-    }
-    return s.substring(resultStart, resultStart + resultLength)
-  }
-
-  expandRange(str, begin, end) {
-    while (begin >= 0 && end < str.length() && str.charAt(begin) == str.charAt(end)) {
-      begin--;
-      end++;
-    }
-
-    if (resultLength < end - begin -1) {
-      resultStart = begin + 1;
-      resultLength = end - begin -1;
-    }
-  }
   """
+  require Logger
   @spec longest_palindrome(s :: String.t()) :: String.t()
   def longest_palindrome(s) when s == "" or is_nil(s), do: ""
 
   def longest_palindrome(s) do
-    start = 0
-    string_length = String.length(s)
-    context = %{start: 0, length: 0}
-    range = Range.new(0, string_length - 1)
-    chars = string_to_array(s)
-    find_longest(s, string_length, chars, range, context, start)
+    {array, n} = to_array(s)
+    find_longest({s, array, n}, 0, {0, 0})
   end
 
-  # base case
-  defp find_longest(s, string_length, _chars, _range, context, start)
-       when start == string_length - 1 do
-    longest_from_range(s, context)
+  defp find_longest({s, _array, n}, index, {left, right}) when index > n do
+    String.slice(s, left..right)
   end
 
-  # reduce case
-  defp find_longest(s, string_length, chars, range, context, start) do
-    context = expand_range(s, string_length, chars, range, start, start, context)
-    context = expand_range(s, string_length, chars, range, start, start + 1, context)
-    find_longest(s, string_length, chars, range, context, start + 1)
+  defp find_longest(data, index, longest) do
+    longest = expand_range(data, index, index, longest)
+    longest = expand_range(data, index, index + 1, longest)
+    find_longest(data, index + 1, longest)
   end
 
-  defp expand_range(_s, string_length, chars, range, st, en, context) do
-    {left, right} =
-      Enum.reduce_while(range, {st, en}, fn _n, {left, right} ->
-        if left >= 0 and right < string_length and
-             :array.get(left, chars) == :array.get(right, chars) do
-          {:cont, {left - 1, right + 1}}
-        else
-          {:halt, {left, right}}
-        end
-      end)
+  defp expand_range({_s, _array, n} = data, left, right, longest) when left == right do
+    new_left = max(left - 1, 0)
+    new_right = min(right + 1, n)
+    expand_range(data, new_left, new_right, longest)
+  end
 
-    new_start = left + 1
-    new_length = right - left - 1
+  defp expand_range({_s, array, n} = data, left, right, longest) when left >= 0 and right <= n do
+    if :array.get(left, array) == :array.get(right, array) do
+      new_longest = update_longest({left, right}, longest)
 
-    if new_length > context.length do
-      %{context | start: new_start, length: new_length}
+      expand_range(data, left - 1, right + 1, new_longest)
     else
-      context
+      longest
     end
   end
 
-  defp longest_from_range(s, %{start: start, length: length}) do
-    range = start..(start + length - 1)
-    String.slice(s, range)
-  end
+  defp expand_range(_data, _left, _right, longest), do: longest
 
-  defp string_to_array(s) do
+  # keep first one found in case of even
+  defp update_longest({a, b}, {c, d} = longest) when d - c >= b - a, do: longest
+  defp update_longest(new, _longest), do: new
+
+  defp to_array(s) do
     s
     |> String.codepoints()
-    |> Enum.with_index()
-    |> Enum.reduce(:array.new(), fn {char, index}, arr ->
-      :array.set(index, char, arr)
+    |> Enum.reduce({:array.new(), 0}, fn char, {array, index} ->
+      new_array = :array.set(index, char, array)
+      {new_array, index + 1}
     end)
   end
 end
