@@ -1,6 +1,6 @@
 # LongestPalindromeSubstring
 
-Reference: https://www.youtube.com/watch?v=DK5OKKbF6GI
+Solution Details: https://readreplica.io/leetcode-longest-palindromic-substring-elixir/
 
 ## Problem
 

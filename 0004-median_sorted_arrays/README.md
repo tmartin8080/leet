@@ -1,5 +1,8 @@
 # MedianSortedArrays
 
+Solution Details: https://readreplica.io/leetcode-median-sorted-arrays-elixir-solution/
+
+## Problem
 Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
 
 The overall run time complexity should be O(log (m+n)).
@@ -25,7 +28,3 @@ Constraints:
     0 <= n <= 1000
     1 <= m + n <= 2000
     -106 <= nums1[i], nums2[i] <= 106
-
-## Resources 
-
-https://www.youtube.com/watch?v=LPFhl65R7ww
