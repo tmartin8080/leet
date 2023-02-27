@@ -1,19 +1,24 @@
 defmodule LongestPalindromeSubstringArray do
   @moduledoc """
   ## Approach
-  1. Set starting context
-  2. Iterate over each char to expand_range (Expand Around Center)
-  3. expand_range expands while palindrome is found, halts when not found
-  4. called twice, once for odd and once for even substrings, overwrites context.
-  5. String -> HashMap for efficent random lookup (vs Linked List)
+  - Convert String to Map for efficient random access (vs Linked List).
+  - Iterate over each char to expand_range (Expand Around Center).
+  - expand_range expands while palindrome is found, returns current longest when not found.
+  - expand_range is called twice, once for odd and once for even length substrings.
 
-  ## Solution Details
-  https://youtu.be/DK5OKKbF6GI
+  ## Time Complexity
+
+  `O(n^2)`
 
   ## Profiling
 
   ```
   mix profile.eprof -e "LongestPalindromeSubstring.longest_palindrome(\"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz\")"
+
+  ## Benchmarks
+
+  ```
+  mix run bench.exs
   ```
   """
   require Logger
@@ -53,7 +58,7 @@ defmodule LongestPalindromeSubstringArray do
 
   defp expand_range(_data, _left, _right, longest), do: longest
 
-  # keep first one found in case of even
+  # keep first one found
   defp update_longest({a, b}, {c, d} = longest) when d - c >= b - a, do: longest
   defp update_longest(new, _longest), do: new
 
