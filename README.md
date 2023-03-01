@@ -1,6 +1,6 @@
 # LeetCode Solutions
 
-A collection of LeedCode Problems and Solutions in Elixir.
+A collection of LeetCode Problems and Solutions in Elixir.
 
 ## Detailed Explanations
 
