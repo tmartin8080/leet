@@ -5,31 +5,36 @@ defmodule AddTwoNumbers do
   3. Reverse list
   4. Re-build linked list result using recursion.
   """
-  @spec add_two_numbers(l1 :: ListNode.t() | nil, l2 :: ListNode.t() | nil) :: ListNode.t() | nil
-  def add_two_numbers(l1, l2) do
-    total = 0
-    exponent = 1
-    value1 = list_to_integer(l1, total, exponent)
-    value2 = list_to_integer(l2, total, exponent)
 
-    (value1 + value2)
-    |> Integer.digits()
-    |> Enum.reverse()
-    |> to_linked_list()
+  @spec calc([integer], [integer]) :: [integer]
+  def calc(a, b) do
+    do_calc(a, b, 0, []) |> Enum.reverse()
   end
 
-  defp list_to_integer(nil, total, _), do: total
+  defp do_calc([], [], 0, result), do: result
+  defp do_calc([], [], 1, result), do: [1 | result]
 
-  defp list_to_integer(node, total, exponent) do
-    %ListNode{val: current_value, next: next_node} = node
-    new_total = total + current_value * exponent
-    new_exponent = exponent * 10
-    list_to_integer(next_node, new_total, new_exponent)
+  defp do_calc([a | as], [], carry, result) do
+    {sum, new_carry} = add_with_carry(a, 0, carry)
+
+    do_calc([], as, new_carry, [sum | result])
   end
 
-  defp to_linked_list([]), do: nil
+  defp do_calc([], [b | bs], carry, result) do
+    {sum, new_carry} = add_with_carry(0, b, carry)
 
-  defp to_linked_list([h | tail]) do
-    %ListNode{val: h, next: to_linked_list(tail)}
+    do_calc([], bs, new_carry, [sum | result])
+  end
+
+  defp do_calc([a | as], [b | bs], carry, result) do
+    {sum, new_carry} = add_with_carry(a, b, carry)
+
+    do_calc(as, bs, new_carry, [sum | result])
+  end
+
+  defp add_with_carry(a, b, carry) do
+    sum = (a + b + carry)
+
+    if sum >= 10, do: {sum - 10, 1}, else: {sum, 0}
   end
 end
