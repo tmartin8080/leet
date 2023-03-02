@@ -1,9 +1,8 @@
 defmodule AddTwoNumbers do
   @moduledoc """
-  1. Convert Linked List to Integer (already reversed)
-  2. Split sum into list: [1, 2, 3]
-  3. Reverse list
-  4. Re-build linked list result using recursion.
+  Add ones, then tens, etc and don't forget about carrying.
+
+  Complexity: O(max(n,m))
   """
 
   @spec calc([integer], [integer]) :: [integer]
