@@ -1,67 +1,13 @@
 defmodule AddTwoNumbersTest do
   use ExUnit.Case
-  import AddTwoNumbers
 
-  test "adds 3-digit lists" do
-    l1 = %ListNode{next: %ListNode{next: %ListNode{next: nil, val: 3}, val: 4}, val: 2}
-    l2 = %ListNode{next: %ListNode{next: %ListNode{next: nil, val: 4}, val: 6}, val: 5}
+  import AddTwoNumbers, only: [calc: 2]
 
-    assert add_two_numbers(l1, l2) == %ListNode{
-             val: 7,
-             next: %ListNode{val: 0, next: %ListNode{val: 8, next: nil}}
-           }
-  end
-
-  test "adds zero lists" do
-    l1 = %ListNode{next: nil, val: 0}
-    l2 = %ListNode{next: nil, val: 0}
-    assert add_two_numbers(l1, l2) == %ListNode{val: 0, next: nil}
-  end
-
-  test "adds 9s lists" do
-    l1 = %ListNode{
-      next: %ListNode{
-        next: %ListNode{
-          next: %ListNode{
-            next: %ListNode{
-              next: %ListNode{next: %ListNode{next: nil, val: 9}, val: 9},
-              val: 9
-            },
-            val: 9
-          },
-          val: 9
-        },
-        val: 9
-      },
-      val: 9
-    }
-
-    l2 = %ListNode{
-      next: %ListNode{
-        next: %ListNode{next: %ListNode{next: nil, val: 9}, val: 9},
-        val: 9
-      },
-      val: 9
-    }
-
-    assert add_two_numbers(l1, l2) == %ListNode{
-             val: 8,
-             next: %ListNode{
-               val: 9,
-               next: %ListNode{
-                 val: 9,
-                 next: %ListNode{
-                   val: 9,
-                   next: %ListNode{
-                     val: 0,
-                     next: %ListNode{
-                       val: 0,
-                       next: %ListNode{val: 0, next: %ListNode{val: 1, next: nil}}
-                     }
-                   }
-                 }
-               }
-             }
-           }
+  test ".calc/2" do
+    assert calc([1], [2]) == [3]
+    assert calc([5], [5]) == [0,1]
+    assert calc([2,4,3], [5,6,4]) == [7,0,8]                     # 342 + 465 = 807
+    assert calc([0,0,1], [1,1]) == [1,1,1]                       # 100 + 11 = 111
+    assert calc([9,9,9,9,9,9,9], [9,9,9,9]) == [8,9,9,9,0,0,0,1] # 9,999,999 + 9,999 = 10,009,998
   end
 end
