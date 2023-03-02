@@ -2,15 +2,16 @@
 
 Solution Details: https://readreplica.io/leetcode-add-two-numbers-elixir-solution/
 
-Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit.
 
-The overall run time complexity should be O(log (m+n)).
+Add the two numbers and return the sum as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+The overall run time complexity should be O(max(m,n)).
 
 Constraints:
 
-    nums1.length == m
-    nums2.length == n
-    0 <= m <= 1000
-    0 <= n <= 1000
-    1 <= m + n <= 2000
-    -106 <= nums1[i], nums2[i] <= 106
+* The number of nodes in each linked list is in the range [1, 100].
+* 0 <= Node.val <= 9
+* It is guaranteed that the list represents a number that does not have leading zeros.
